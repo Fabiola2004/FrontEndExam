@@ -8,12 +8,13 @@ import Resultados from './Componets/Resultados';
 
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
+
   <React.StrictMode>
     <Router>
       <Routes>
         <Route path="/" element={<App />} />
-        <Route path="/ingresar" element={<CompraTiquete />} />
-        <Route path="/resultados" element={<Resultados />} />
+        <Route path="/ingreso-datos" element={<CompraTiquete />} />
+        <Route path="/mostrar-resultados" element={<Resultados />} />
       </Routes>
     </Router>
   </React.StrictMode>,

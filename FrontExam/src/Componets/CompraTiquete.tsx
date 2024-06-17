@@ -7,6 +7,9 @@ const {handleSubmit, precio, fecha, setFecha, lugarDestinoId, lugarSalidaId, err
   return (
     <div className="flex items-center justify-center p-12">
       <div className="mx-auto w-full max-w-[550px] bg-white shadow-lg rounded-lg px-8 py-6">
+       <h1 className="text-3xl font-bold underline mb-6">
+       Reservar Tiquetes
+      </h1>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label htmlFor="fecha" className="block text-base font-medium text-[#07074D] mb-1">
