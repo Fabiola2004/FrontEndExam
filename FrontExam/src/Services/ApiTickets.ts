@@ -17,3 +17,9 @@ export const obtenerPrecio = async (salida: number, destino: number) => {
     return data;
   };
   
+  export class PrecioError extends Error {
+    constructor(message: string) {
+      super(message);
+      this.name = 'PrecioError';
+    }
+  }

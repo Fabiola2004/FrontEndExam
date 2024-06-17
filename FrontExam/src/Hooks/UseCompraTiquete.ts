@@ -1,11 +1,27 @@
 import { useState, useEffect } from 'react';
-import { ingresarTiquete, obtenerPrecio } from '../Services/ApiTickets';
+import { PrecioError, ingresarTiquete, obtenerPrecio } from '../Services/ApiTickets';
 
-const UseCompraTiquete = () => {
+
+interface UseCompraTiqueteProps {
+  precio: number;
+  error: string;
+  success: string;
+  fecha: string;
+  lugarSalidaId: string;
+  lugarDestinoId: string;
+  setFecha: React.Dispatch<React.SetStateAction<string>>;
+  setSalida: React.Dispatch<React.SetStateAction<string>>;
+  setDestino: React.Dispatch<React.SetStateAction<string>>;
+  obtenerPrecio: (lugarSalidaId: number, lugarDestinoId: number) => Promise<number>;
+  ingresarTiquete: (tiquete: { lugarSalidaId: number; lugarDestinoId: number; fecha: string; }) => Promise<{ error?: string }>;
+  handleSubmit: (e: React.FormEvent<HTMLFormElement>) => Promise<void>;
+}
+
+const UseCompraTiquete = (): UseCompraTiqueteProps => {
   const [fecha, setFecha] = useState('');
   const [lugarSalidaId, setSalida] = useState('');
   const [lugarDestinoId, setDestino] = useState('');
-  const [precio, setPrecio] = useState(0);
+  const [precio, setPrecio] = useState<number>(0);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
 
@@ -16,7 +32,11 @@ const UseCompraTiquete = () => {
           const precioData = await obtenerPrecio(Number(lugarSalidaId), Number(lugarDestinoId));
           setPrecio(precioData);
         } catch (err) {
-          setError('Error al obtener el precio');
+          if (err instanceof PrecioError) {
+            setError('Error al obtener el precio: ' + err.message);
+          } else {
+            setError('Error al obtener el precio');
+          }
         }
       }
     };
@@ -24,7 +44,7 @@ const UseCompraTiquete = () => {
     actualizarPrecio();
   }, [lugarSalidaId, lugarDestinoId]);
 
-  const handleSubmit = async (e : any) => {
+  const handleSubmit: UseCompraTiqueteProps['handleSubmit'] = async (e) => {
     e.preventDefault();
 
     try {
@@ -43,14 +63,24 @@ const UseCompraTiquete = () => {
         setDestino('');
         setPrecio(0);
       }
-    } catch (err) {
+    } catch {
       setError('Error al procesar la solicitud');
     }
   };
 
   return {
-    precio, obtenerPrecio, ingresarTiquete, error, success, handleSubmit, fecha, setFecha,
-    lugarSalidaId, lugarDestinoId, setSalida, setDestino
+    precio,
+    error,
+    success,
+    fecha,
+    lugarSalidaId,
+    lugarDestinoId,
+    setFecha,
+    setSalida,
+    setDestino,
+    obtenerPrecio,
+    ingresarTiquete,
+    handleSubmit,
   };
 };
 
